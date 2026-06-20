@@ -1,62 +1,49 @@
+public class Auror extends PersonajeMagico implements LanzadorDeHechizos {
 
-public class Auror {
 
-    private int vida;
-    private int mana;
-
-    public Auror() {
-        this.vida = 100;
-        this.mana = 100;
+    public Auror(String nombre, int nivel) {
+        super(nombre, nivel);
     }
 
-    public void lanzarHechizo() {
-        if (vida <= 0) {
-            System.out.println("El Auror está fuera de combate.");
-            return;
-        }
+    @Override
+    public void lanzarHechizo(PersonajeMagico objetivo) {
 
-        if (mana >= 20) {
-            mana -= 20;
-            System.out.println("El Auror lanzó un hechizo.");
-            System.out.println("Daño causado: 25 puntos.");
-            System.out.println("Maná restante: " + mana);
+        int costoMana = 20;
+        int danio = 25;
+
+        if (estaFueraDeCombate()) {
+            System.out.println(getNombre() + " está fuera de combate y no puede lanzar hechizos.");
+        } else if (objetivo == null) {
+            System.out.println("El objetivo no existe.");
+        } else if (objetivo.estaFueraDeCombate()) {
+            System.out.println("El objetivo ya está fuera de combate.");
+        } else if (!tieneManaSuficiente(costoMana)) {
+            System.out.println(getNombre() + " no tiene mana suficiente.");
         } else {
-            System.out.println("No hay suficiente maná para lanzar el hechizo.");
+            gastarMana(costoMana);
+            objetivo.recibirDanio(danio);
+            System.out.println(getNombre() + " lanzó un hechizo de combate como Auror.");
+            System.out.println("Daño causado: " + danio + " puntos.");
         }
     }
 
     public void defenderse() {
-        if (vida <= 0) {
-            System.out.println("El Auror está fuera de combate y no puede defenderse.");
+        if (estaFueraDeCombate()) {
+            System.out.println(getNombre() + " está fuera de combate y no puede defenderse.");
             return;
         }
 
-        vida += 15;
 
-        if (vida > 100) {
-            vida = 100;
-        }
+        recuperarVida(15);
 
-        System.out.println("El Auror se defendió.");
-        System.out.println("Vida actual: " + vida);
+        System.out.println(getNombre() + " se defendió.");
+        System.out.println("Vida actual: " + getVida());
     }
 
-    public void recibirDanio(int danio) {
-        vida -= danio;
-
-        if (vida < 0) {
-            vida = 0;
-        }
-
-        System.out.println("El Auror recibió " + danio + " puntos de daño.");
-        System.out.println("Vida restante: " + vida);
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public int getMana() {
-        return mana;
+    @Override
+    public void mostrarDatos() {
+        super.mostrarDatos();
+        System.out.println("Tipo: Auror");
     }
 }
+
